@@ -34,20 +34,17 @@ class TennisScoring
             return 'Deuce';
         }
 
-        $score = $this->lookup[$this->player1->points] . '-';
-        $score .= $this->tied() ? 'All' : $this->lookup[$this->player2->points];
-
-        return $score;
+        return $this->generalScore();
     }
 
     protected function hasAWinner()
     {
-        return $this->hasEnoughPointsToBeWon() && $this->isLeadingByTwo();
+        return $this->hasEnoughPointsToBeWon() && $this->isLeadingByAtLeatTwo();
     }
 
     protected function hasTheAdvantage()
     {
-        return $this->hasEnoughPointsToBeWon() && abs($this->player1->points - $this->player2->points) >= 1;
+        return $this->hasEnoughPointsToBeWon() && $this->isLeadingByOne();
     }
 
     protected function inDeuce()
@@ -65,13 +62,26 @@ class TennisScoring
         return max($this->player1->points, $this->player2->points) >= 4;
     }
 
-    protected function isLeadingByTwo()
+    protected function isLeadingByAtLeatTwo()
     {
         return abs($this->player1->points - $this->player2->points) >= 2;
+    }
+
+    protected function isLeadingByOne()
+    {
+        return abs($this->player1->points - $this->player2->points) >= 1;
     }
 
     protected function tied()
     {
         return $this->player1->points === $this->player2->points;
+    }
+
+    protected function generalScore()
+    {
+        $score = $this->lookup[$this->player1->points] . '-';
+        $score .= $this->tied() ? 'All' : $this->lookup[$this->player2->points];
+
+        return $score;        
     }
 }
